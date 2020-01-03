@@ -25,10 +25,9 @@ axios.interceptors.response.use(res => {
 
   if (data.message == 'jwt expired') {
     /* get new token */
-    const accesstoken = await store.dispatch('auth/getRefreshToken')
-    console.log('accesstoken -> ', accesstoken)
+    const objToken = await store.dispatch('auth/getRefreshToken')
     /* set token */
-    originalReq.headers.Authorization = `Bearer ${accesstoken}`
+    originalReq.headers.Authorization = `Bearer ${objToken.accessToken}`
     console.log('call original request -> ', originalReq)
     const res = await axios(originalReq)
     console.log('res after call original request -> ', res)
@@ -68,12 +67,18 @@ router.beforeEach((to, from, next) => {
         path: '/login'
       })
     } else {
+      console.log('token beforeEach => ', store.state.auth.token)
       if (!store.state.auth.token) {
         // get new token
         console.log('get new token ...')
-        store.dispatch('auth/getRefreshToken')
+        store.dispatch('auth/getRefreshToken').then(res => {
+          console.log('r -> ', res)
+          next()
+        })
+      } else {
+        next()
       }
-      next()
+      // next()
     }
   } else {
     next()

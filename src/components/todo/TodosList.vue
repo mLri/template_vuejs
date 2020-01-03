@@ -13,11 +13,11 @@
       <div 
         @dblclick="onUpdateTodo(todo)" 
         v-for="todo in allTodos" 
-        :key="todo.id" 
+        :key="todo._id" 
         class="todo"
         :class="{'is-complete': todo.completed}">
         {{ todo.title }}
-        <i @click="deleteTodo(todo.id)" class="fas fa-trash-alt"></i>
+        <i @click="deleteTodo(todo._id)" class="fas fa-trash-alt"></i>
       </div>
     </div>
   </div>

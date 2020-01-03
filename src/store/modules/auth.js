@@ -52,16 +52,14 @@ const actions = {
     }
   },
   async getRefreshToken({ commit }) {
-    // const res = await axios.post('http://localhost:3000/api/user/refresh_token',{}, {credentials: 'include'})
-    // console.log('res -> ', res)
     return new Promise(async (resolve, reject) => {
       const res = await axios("http://localhost:3000/api/user/refresh_token", {
         method: "post",
         withCredentials: true
       })
       if(res.status === 200) {
-        commit('setNewToken', res.data.accessToken)
-        resolve(res.data.accessToken)
+        commit('setUser', res.data)
+        resolve(res.data)
       }
     })
   },
@@ -83,6 +81,7 @@ const mutations = {
     state.token = newToken
   },
   setUser: (state, user) => {
+    state.userId = user.userId
     state.email = user.email
     state.token = user.accessToken
     state.isLoggedIn = true
